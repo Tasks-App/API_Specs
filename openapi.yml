@@ -1,0 +1,148 @@
+openapi: 3.0.3
+info:
+  title: API de Gestion des Tâches
+  description: |
+    Cette API permet de gérer des tâches.
+  version: 1.0.0
+servers:
+  - url: https://api.example.com/v1
+    description: Serveur principal
+
+paths:
+  /tasks:
+    get:
+      summary: Récupérer la liste de toutes les tâches
+      description: |
+        Retourne une liste de toutes les tâches, qu'elles soient effectuées ou non.
+      responses:
+        '200':
+          description: Liste des tâches récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      summary: Ajouter une nouvelle tâche
+      description: |
+        Permet d'ajouter une nouvelle tâche à la liste.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskInput'
+      responses:
+        '201':
+          description: Tâche créée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          description: Requête invalide
+
+  /tasks/pending:
+    get:
+      summary: Récupérer les tâches à effectuer
+      description: |
+        Retourne une liste des tâches qui ne sont pas encore effectuées.
+      responses:
+        '200':
+          description: Liste des tâches à effectuer récupérée avec succès
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+  /tasks/{id}:
+    get:
+      summary: Récupérer une tâche par son ID
+      description: |
+        Retourne les détails d'une tâche spécifique en fonction de son identifiant.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L'identifiant unique de la tâche
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tâche récupérée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Tâche non trouvée
+
+    patch:
+      summary: Changer le statut d'une tâche
+      description: |
+        Permet de modifier le statut d'une tâche (effectuée ou non).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: L'identifiant unique de la tâche
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                completed:
+                  type: boolean
+                  description: Indique si la tâche est effectuée ou non
+      responses:
+        '200':
+          description: Statut de la tâche mis à jour avec succès
+        '400':
+          description: Requête invalide
+        '404':
+          description: Tâche non trouvée
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: L'identifiant de la tâche
+        label:
+          type: string
+          description: L'intitulé de la tâche
+        description:
+          type: string
+          description: Une petite description de la tâche
+        completed:
+          type: boolean
+          description: Indique si la tâche est effectuée ou non
+      required:
+        - id
+        - label
+        - completed
+
+    TaskInput:
+      type: object
+      properties:
+        label:
+          type: string
+          description: L'intitulé de la tâche
+        description:
+          type: string
+          description: Une petite description de la tâche
+        completed:
+          type: boolean
+          description: Indique si la tâche est effectuée ou non
+      required:
+        - label
+        - completed
