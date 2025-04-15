@@ -101,6 +101,8 @@ paths:
                 completed:
                   type: boolean
                   description: Indique si la tâche est effectuée ou non
+              required:
+                - completed
       responses:
         '200':
           description: Statut de la tâche mis à jour avec succès
