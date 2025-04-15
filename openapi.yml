@@ -112,24 +112,15 @@ paths:
 components:
   schemas:
     Task:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: L'identifiant de la tâche
-        label:
-          type: string
-          description: L'intitulé de la tâche
-        description:
-          type: string
-          description: Une petite description de la tâche
-        completed:
-          type: boolean
-          description: Indique si la tâche est effectuée ou non
-      required:
-        - id
-        - label
-        - completed
+      allOf:
+        - $ref: '#/components/schemas/TaskInput'
+        - type: object
+          properties:
+            id:
+              type: integer
+              description: L'identifiant de la tâche
+          required:
+            - id
 
     TaskInput:
       type: object
